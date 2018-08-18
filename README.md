@@ -1,4 +1,5 @@
 # timetrackr
+Try the [Demo](https://timetrackr.netlify.com/) on Netlify
 
 ![screenshot of the tool](screenshot.png)
 
