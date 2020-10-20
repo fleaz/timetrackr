@@ -19,17 +19,23 @@
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      timer: {
-        0: {
+import { throttle } from 'lodash';
+
+function newTimer() {
+  return {
           interval: null,
           title: '',
           runTime: 0,
           state: 'stopped'
-        }
+        };
+}
+
+export default {
+  name: 'Timers',
+  data () {
+    return {
+      timer: {
+        0: newTimer(),
       }
     }
   },
@@ -65,13 +71,34 @@ export default {
     addTimer: function () {
       const l = Object.keys(this.timer).length
       console.log('lol')
-      this.$set(this.timer, l, {
-        interval: null,
-        title: '',
-        runTime: 0,
-        state: 'stopped'
-      })
-    }
+      this.$set(this.timer, l, newTimer())
+    },
+    saveState: throttle(function () {
+      localStorage.setItem('timetrackr.timer-state', JSON.stringify(this.timer));
+    }, 5000, { leading: true, trailing: true }),
+    restoreState: function () {
+      const previouslySavedState = localStorage.getItem('timetrackr.timer-state');
+      if(previouslySavedState !== null) {
+        try {
+          const restoredState = JSON.parse(previouslySavedState);
+          this.timer = restoredState;
+          Object.entries(this.timer).forEach(([timerId,timer]) => {
+            if(timer.state === 'running') {
+              this.start(timerId);
+            }
+          });
+        } catch(e) {
+          console.log('Failed to restore previously saved state:', e, previouslySavedState);
+          localStorage.setItem('timetrackr.timer-state', JSON.stringify({ 0: newTimer() }));
+        }
+      }
+    },
+  },
+  created() {
+    this.restoreState();
+  },
+  updated() {    
+    this.saveState();
   }
 }
 </script>
