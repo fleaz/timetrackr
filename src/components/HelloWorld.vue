@@ -62,7 +62,7 @@ export default {
     stopwatch: function (id) {
       this.timer[id].runTime += 1
     },
-    addTimer: function (id) {
+    addTimer: function () {
       const l = Object.keys(this.timer).length
       console.log('lol')
       this.$set(this.timer, l, {
