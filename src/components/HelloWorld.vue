@@ -3,7 +3,7 @@
   <h1 class="title">Timetrackr</h1>
   <div class="columns" v-for="(t,id) in timer" :key="id">
     <div class="column">
-      <input  v-model='t.title' size="80" :disabled="t.state === 'stopped' ? false:true">
+      <input v-model='t.title' size="80" :disabled="t.state === 'stopped' ? false:true">
     </div>
     <div class="column time">
       {{ toHHMMSS(t.runTime) }}

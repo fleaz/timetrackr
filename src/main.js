@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
-import Buefy from 'buefy'
+import { Icon } from 'buefy'
 import 'buefy/dist/buefy.css'
 import router from './router'
 
-Vue.use(Buefy)
+Vue.use(Icon)
 
 Vue.config.productionTip = false
 
