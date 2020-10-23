@@ -10,12 +10,19 @@
     </div>
     <div class="column">
       <template v-if="deleteMode">
-        <button class="button is-danger" v-on:click="deleteTimer(id)"><b-icon icon="delete"></b-icon></button>
+        <template v-if="t.state === 'running'">
+          <b-tooltip label="Cannot delete a running timer" position="is-bottom">
+            <button class="button is-danger" disabled><b-icon icon="delete"></b-icon></button>
+          </b-tooltip>
+        </template>
+        <template v-else>
+            <button class="button is-danger" v-on:click="deleteTimer(id)"><b-icon icon="delete"></b-icon></button>
+        </template>
       </template>
       <template v-else>
-        <button class="button is-success" v-on:click="start(id)" :disabled="t.state !== 'running' ? false : true"><b-icon icon="play"></b-icon></button>
-        <button class="button is-warning" v-on:click="pause(id)" :disabled="t.state === 'running' ? false: true"><b-icon icon="pause"></b-icon></button>
-        <button class="button is-danger" v-on:click="reset(id)" :disabled="t.state === 'paused' ? false: true"><b-icon icon="restart"></b-icon></button>
+        <button class="button is-success" v-on:click="start(id)" :disabled="t.state === 'running'"><b-icon icon="play"></b-icon></button>
+        <button class="button is-warning" v-on:click="pause(id)" :disabled="t.state !== 'running'"><b-icon icon="pause"></b-icon></button>
+        <button class="button is-danger" v-on:click="reset(id)" :disabled="t.state !== 'paused'"><b-icon icon="restart"></b-icon></button>
       </template>
     </div>
   </div>
