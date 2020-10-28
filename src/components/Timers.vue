@@ -9,12 +9,30 @@
       {{ toHHMMSS(t.runTime) }}
     </div>
     <div class="column">
-      <button class="button is-success" v-on:click="start(id)" :disabled="t.state !== 'running' ? false : true"><b-icon icon="play"></b-icon></button>
-      <button class="button is-warning" v-on:click="pause(id)" :disabled="t.state === 'running' ? false: true"><b-icon icon="pause"></b-icon></button>
-      <button class="button is-danger" v-on:click="reset(id)" :disabled="t.state === 'paused' ? false: true"><b-icon icon="restart"></b-icon></button>
+      <template v-if="deleteMode">
+        <template v-if="t.state === 'running'">
+          <b-tooltip label="Cannot delete a running timer" position="is-bottom">
+            <button class="button is-danger" disabled><b-icon icon="delete"></b-icon></button>
+          </b-tooltip>
+        </template>
+        <template v-else>
+            <button class="button is-danger" v-on:click="deleteTimer(id)"><b-icon icon="delete"></b-icon></button>
+        </template>
+      </template>
+      <template v-else>
+        <button class="button is-success" v-on:click="start(id)" :disabled="t.state === 'running'"><b-icon icon="play"></b-icon></button>
+        <button class="button is-warning" v-on:click="pause(id)" :disabled="t.state !== 'running'"><b-icon icon="pause"></b-icon></button>
+        <button class="button is-danger" v-on:click="reset(id)" :disabled="t.state !== 'paused'"><b-icon icon="restart"></b-icon></button>
+      </template>
     </div>
   </div>
-  <button class="button is-primary" v-on:click="addTimer"><b-icon icon="plus"></b-icon></button>
+  <template v-if="deleteMode">
+    <button class="button is-primary" v-on:click="disableDeleteMode"><b-icon icon="check"></b-icon><span>Finish</span></button>
+  </template>
+  <template v-else>
+    <button class="button is-primary" v-on:click="addTimer"><b-icon icon="plus"></b-icon></button>
+    <button class="button is-danger" v-on:click="enableDeleteMode"><b-icon icon="delete"></b-icon></button>
+  </template>
 </div>
 </template>
 
@@ -34,6 +52,7 @@ export default {
   name: 'Timers',
   data () {
     return {
+      deleteMode: false,
       timer: {
         0: newTimer(),
       }
@@ -69,9 +88,17 @@ export default {
       this.timer[id].runTime += 1
     },
     addTimer: function () {
-      const l = Object.keys(this.timer).length
-      console.log('lol')
-      this.$set(this.timer, l, newTimer())
+      const l = Object.keys(this.timer).length;
+      this.$set(this.timer, l, newTimer());
+    },
+    deleteTimer: function (id) {
+      this.$delete(this.timer, id);
+    },
+    enableDeleteMode: function () {
+      this.deleteMode = true;
+    },
+    disableDeleteMode: function () {
+      this.deleteMode = false;
     },
     saveState: throttle(function () {
       localStorage.setItem('timetrackr.timer-state', JSON.stringify(this.timer));
