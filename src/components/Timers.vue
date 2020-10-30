@@ -31,7 +31,7 @@
   </template>
   <template v-else>
     <button class="button is-primary" v-on:click="addTimer"><b-icon icon="plus"></b-icon></button>
-    <button class="button is-danger" v-on:click="enableDeleteMode"><b-icon icon="delete"></b-icon></button>
+    <button v-if="Object.keys(timer).length !== 0" class="button is-danger" v-on:click="enableDeleteMode"><b-icon icon="delete"></b-icon></button>
   </template>
 </div>
 </template>
