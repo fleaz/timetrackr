@@ -142,4 +142,8 @@ export default {
   font-size: 120%;
   font-family: monospace;
 }
+
+.button {
+  margin-inline-end: 5px;
+}
 </style>
